@@ -11,7 +11,7 @@
 4. Microsoft.EntityFrameworkCore.
 
 ## appsettings.json
-'''json 
+```json 
 {
   "Logging": {
     "LogLevel": {
@@ -36,10 +36,10 @@
     "Secret": "E7kNGoOiDm55KRBylFjdNteQQyNyHdgTjFDuQQNu"
   }
 }
-'''
+```
 
 ## Here you can change your
-1.Default Connection String 
-2.Jwtconfig
-3.EmailConfiguration
+1. Default Connection String 
+2. Jwtconfig
+3. EmailConfiguration
 4. In `Models/Url.cs` change url
