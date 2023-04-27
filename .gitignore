@@ -365,3 +365,5 @@ FodyWeavers.xsd
 
 Uploads/
 /appsettings.json
+*.db-shm
+*.db-wal
