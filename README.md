@@ -38,8 +38,18 @@
 }
 ```
 
-## Here you can change your
-1. Default Connection String 
-2. Jwtconfig
-3. EmailConfiguration
-4. In `Models/Url.cs` change url
+## Changes (Optional)
+1. Default Connection String in `appsettings.json` 
+2. Jwtconfig in `appsettings.json`
+3.  In `Models/Url.cs` change url
+
+## Changes (Required)
+1. EmailConfiguration in `appsettings.json`
+2. Add `Uploads` folder in your project
+3. following Commands 
+```
+Add-migration migration_name
+update-database
+```
+
+
