@@ -1,4 +1,12 @@
 # Leafboard Api
+## Tools 
+1. Visual Studio
+2. EntityFramework
+3. Jwt token
+4. Smtp-client 
+5. SQLite as Database
+
+```Without Identity and ``` 
 
 ## Pre-installed Packages  
 1. AspNetCore.OpenApi

@@ -24,7 +24,7 @@ namespace AuthApi.Repositories.Domain
         }
         public async Task<Users> FindByEmailAsync(string email)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u=>u.Email ==email);
+            var user = await _context.Users.SingleOrDefaultAsync(u=>u.Email ==email.ToLower());
             if (user == null) 
             {
                 return null;
@@ -33,7 +33,7 @@ namespace AuthApi.Repositories.Domain
         }
         public async Task<bool> CheckPasswordAsync(Users users, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == users.Email);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == users.Email.ToLower());
             if (user.Password == password)
             {
                 return true;
@@ -43,7 +43,7 @@ namespace AuthApi.Repositories.Domain
 
         public async Task<string> ChangePasswordAsync(Users users,string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == users.Email);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == users.Email.ToLower());
             if (user != null)
             {
                 user.Password = password;
@@ -67,7 +67,7 @@ namespace AuthApi.Repositories.Domain
                 var AdminInstance = new Users
                 {
                     Name = model.Name,
-                    Email = model.Email,
+                    Email = model.Email.ToLower(),
                     Role = Roles.Admin,
                     Password = model.Password,
                     IsVerified = false,
@@ -100,7 +100,7 @@ namespace AuthApi.Repositories.Domain
                 var UserInstance = new Users
                 {
                     Name = model.Name,
-                    Email = model.Email,
+                    Email = model.Email.ToLower(),
                     Role = Roles.User,
                     Password = model.Password,
                     IsVerified = false,
@@ -116,7 +116,7 @@ namespace AuthApi.Repositories.Domain
                 var AllUserInstance = new AllUsers
                 {
                     Name = model.Name,
-                    Email = model.Email,
+                    Email = model.Email.ToLower(),
                     PhoneNumber = model.PhoneNumber,
                     Gender = model.Gender,
                     Country = model.Country,
@@ -136,15 +136,15 @@ namespace AuthApi.Repositories.Domain
         {
             try
             {
-                var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
+                var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email.ToLower());
                 var token = _tokenService.GetToken(user, user.Role);
                 var refreshToken = _tokenService.GetRefreshToken();
-                var tokenInfo = _context.Token.FirstOrDefault(a => a.UserEmail == user.Email);
+                var tokenInfo = _context.Token.FirstOrDefault(a => a.UserEmail == user.Email.ToLower());
                 if (tokenInfo == null)
                 {
                     var info = new Token
                     {
-                        UserEmail = user.Email,
+                        UserEmail = user.Email.ToLower(),
                         RefreshToken = refreshToken,
                         RefreshTokenExpiry = DateTime.Now.AddDays(1)
                     };
@@ -166,7 +166,7 @@ namespace AuthApi.Repositories.Domain
                 var result = new LoginResponse
                 {
                     Name = user.Name,
-                    Email = user.Email,
+                    Email = user.Email.ToLower(),
                     Role = user.Role,
                     Token = token.TokenString,
                     RefreshToken = refreshToken,
@@ -186,10 +186,10 @@ namespace AuthApi.Repositories.Domain
             {
                 Random rnd = new Random();
                 var otp = rnd.Next(100000, 999999);
-                var user = await _context.Otp.FirstOrDefaultAsync(u => u.UserEmail == email);
+                var user = await _context.Otp.FirstOrDefaultAsync(u => u.UserEmail == email.ToLower());
                 if (user == null)
                 {
-                    Otp otpModel = new Otp { UserEmail = email, otp = otp, ExpiryTime = DateTime.Now.AddMinutes(5) };
+                    Otp otpModel = new Otp { UserEmail = email.ToLower(), otp = otp, ExpiryTime = DateTime.Now.AddMinutes(5) };
                     await _context.Otp.AddAsync(otpModel);
                     _context.SaveChanges();
                 }
@@ -199,7 +199,7 @@ namespace AuthApi.Repositories.Domain
                     user.ExpiryTime = DateTime.Now.AddMinutes(5);
                     _context.SaveChanges();
                 }
-                Message message = new Message { To = email, Subject = "Please verify your email", Content = otp.ToString() };
+                Message message = new Message { To = email.ToLower(), Subject = "Please verify your email", Content = otp.ToString() };
                 _emailService.SendEmail(message);
                 return "Otp Send ";
             }
@@ -211,7 +211,7 @@ namespace AuthApi.Repositories.Domain
 
         public async Task<string> CheckOtpAsync(VerifyModel model)
         {
-            var OTP = await _context.Otp.FirstOrDefaultAsync(o=>o.UserEmail==model.Email);
+            var OTP = await _context.Otp.FirstOrDefaultAsync(o=>o.UserEmail==model.Email.ToLower());
             if (OTP == null)
             {
                 return "No record Found, Please Enter valid Email";
@@ -232,7 +232,7 @@ namespace AuthApi.Repositories.Domain
         {
             try
             {
-                var result = await _context.Users.FirstOrDefaultAsync(o => o.Email == model.Email);
+                var result = await _context.Users.FirstOrDefaultAsync(o => o.Email == model.Email.ToLower());
                 result.IsVerified = true;
                 _context.SaveChanges();
                 return "User Verified ";

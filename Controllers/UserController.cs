@@ -9,7 +9,9 @@ using System.Security.Claims;
 
 namespace AuthApi.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [Authorize(Roles = "User")]
     public class UserController : ControllerBase

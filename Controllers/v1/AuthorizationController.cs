@@ -4,9 +4,10 @@ using AuthApi.Repositories.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthApi.Controllers
+namespace AuthApi.Controllers.v1
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
@@ -138,7 +139,7 @@ namespace AuthApi.Controllers
             {
                 return Ok(new Status(400, "Server Error", null));
             }
-            return Ok(new Status(400, "Registration Successfull", null));
+            return Ok(new Status(200, "Registration Successfull", null));
            
         }
 

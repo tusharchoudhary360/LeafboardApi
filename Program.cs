@@ -3,6 +3,7 @@ using AuthApi.Models.DTO;
 using AuthApi.Repositories.Abstract;
 using AuthApi.Repositories.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
@@ -18,6 +19,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//API versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+         //new QueryStringApiVersionReader("api-version"),
+         new HeaderApiVersionReader("x-version")//,
+         //new MediaTypeApiVersionReader("ver")
+        );
+});
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 //setup database context
 builder.Services.AddDbContext<DatabaseContext>(optionsAction: options => options.UseSqlite(builder.Configuration.GetConnectionString(name: "DefaultConnection")));
 
